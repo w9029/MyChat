@@ -16,17 +16,19 @@
 #define MSG_CHAT_Private 12	//私聊请求
 #define MSG_CHAT_ALL 13		//群聊请求
 #define MSG_FILE_NAME 14	//文件传输-文件名
-#define MSG_FILE_DATA 15	//文件传输-文件内容
-#define MSG_FILE_DONE 16	//文件传输-完成
-#define MSG_FILE_ERROR 17	//文件传输-异常终止
-#define MSG_TEMP 18			//传输其他数据(帐号密码等)
-#define MSG_EXIT 19			//用户退出信号
+#define MSG_FILE_ACK 15		//文件传输-文件名
+#define MSG_FILE_DATA 16	//文件传输-文件内容
+#define MSG_FILE_DONE 17	//文件传输-完成
+#define MSG_FILE_ERROR 18	//文件传输-异常终止
+#define MSG_TEMP 19			//传输其他数据(帐号密码等)
+#define MSG_EXIT 20			//用户退出信号
 
 struct MSG
 {
 	int MSG_TYPE;
 	char MSG_SRC[50];
 	char MSG_DES[50];
+	char MSG_FILENAME[50];
 	char MSG_data[1024];
 };
 

@@ -24,7 +24,8 @@ int GetAck()
 		sigfun();
 		return 0;
 	}
-	else if(msgbuf.MSG_TYPE == MSG_ACK || msgbuf.MSG_TYPE == MSG_FAIL)
+	else if(msgbuf.MSG_TYPE == MSG_ACK 
+			|| msgbuf.MSG_TYPE == MSG_FAIL)
 	{
 		if(msgbuf.MSG_TYPE == MSG_FAIL)
 			printf("%s\n",msgbuf.MSG_data);
@@ -33,7 +34,7 @@ int GetAck()
 	}
 	else 
 	{
-		printf("recvived data is not ACK!\n");
+		printf("recvived data is not ACK! %d \n", msgbuf.MSG_TYPE);
 		return 0;
 	}
 }
