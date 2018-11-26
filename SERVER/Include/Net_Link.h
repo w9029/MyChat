@@ -10,7 +10,7 @@
 #include<netinet/in.h>
 #include "MSG_struct.h"
 
-#define SPORT 6000
+#define SPORT 6001
 #define SADDR "0.0.0.0"
 
 void Link();

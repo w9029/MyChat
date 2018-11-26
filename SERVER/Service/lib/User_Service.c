@@ -5,6 +5,7 @@
 #include "sigfun.h"
 #include "Cli_Exit.h"
 #include "Get_user_stat.h"
+#include "Get_user_cfd.h"
 
 void CheckCount(int cfd);
 void CHAT(int cfd);
@@ -12,6 +13,8 @@ void LOCK(int cfd);
 void UNLOCK(int cfd);
 void KICK(int cfd);
 void UNKICK(int cfd);
+void FILEACK(int cfd);
+void SENDFILEMSG(int cfd, struct MSG msgbuf);
 
 extern struct Linker Linker_head;	//接入者链表
 extern struct Linker *Last_Linker;	//指向最后一个接入者
@@ -62,6 +65,25 @@ void User_Service(int cfd, char username[])
 			case MSG_UNKICK:
 				//解禁
 				UNKICK(cfd);
+				break;
+			case MSG_FILE_NAME:
+				//FILE
+				SENDFILEMSG(cfd, msgbuf);
+				break;
+			case MSG_FILE_ACK:
+				//FILEACK
+				SENDFILEMSG(cfd, msgbuf);
+				break;
+			case MSG_FILE_DATA:
+				//FILE_DATA
+				SENDFILEMSG(cfd, msgbuf);
+				break;
+			case MSG_FILE_DONE:
+				SENDFILEMSG(cfd, msgbuf);
+				break;
+			case MSG_FILE_ERROR:
+				//FILE_ERROR
+				SENDFILEMSG(cfd, msgbuf);
 				break;
 			case MSG_EXIT:
 				//注销
@@ -200,6 +222,7 @@ void CHAT(int cfd)
 		else
 		{
 			printf("Wrong MSG when chat\n");
+			SendFail(cfd, "失败！对方网络繁忙\n");
 		}
 	}
 }
@@ -444,9 +467,29 @@ void UNKICK(int cfd)
 	SendFail(cfd, "拉回失败！未登录的用户");
 }
 
+void SENDFILEMSG(int cfd, struct MSG msgbuf)
+{
+	char DesUser[50];
+	int descfd;
 
-
-
+	//获取对方cfd
+	strcpy(DesUser, msgbuf.MSG_DES);
+	descfd = Get_user_cfd(DesUser);
+	
+	//获取失败
+	if(descfd == -1)
+	{
+		bzero(&msgbuf, sizeof(struct MSG));
+		msgbuf.MSG_TYPE = MSG_FILE_ERROR;
+		printf("SendFILE get descfd fail\n");
+		strcpy(msgbuf.MSG_data, "发送失败！对方不在线");
+		SendMSG(cfd, msgbuf);
+		return;
+	}
+	
+	//获取成功
+	SendMSG(descfd, msgbuf);
+}
 
 
 
